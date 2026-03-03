@@ -9,6 +9,7 @@ const seedAccounts = [
 ];
 
 export const useAccountStore = defineStore('account', () => {
+  // 계좌별 잔액과 비중 계산을 담당한다.
   const accounts = ref(seedAccounts);
 
   const totalBalanceAmount = computed(() =>

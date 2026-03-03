@@ -40,6 +40,7 @@ const emit = defineEmits(['open-category-edit', 'open-transaction-edit']);
       </div>
     </div>
 
+    <!-- 필터 폼은 현재 UI 뼈대이며, 실제 검색 로직은 추후 연결한다. -->
     <div class="filter-card">
       <div class="field-grid">
         <label>

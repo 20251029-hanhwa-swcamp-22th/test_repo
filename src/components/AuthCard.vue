@@ -11,6 +11,7 @@ const props = defineProps({
 
 const emit = defineEmits(['navigate']);
 
+// mode 값으로 로그인/회원가입 UI를 한 컴포넌트에서 전환한다.
 const isLogin = computed(() => props.mode === 'login');
 const title = computed(() => (isLogin.value ? '로그인' : '회원가입'));
 const submitLabel = computed(() => (isLogin.value ? '로그인' : '회원가입'));

@@ -25,21 +25,17 @@ const formatCurrency = (value, withSign = false) => {
 };
 
 export const useTransactionStore = defineStore('transaction', () => {
+  // 초기에는 시드 데이터로 렌더링하고, 이후 API 연동 지점으로 확장한다.
   const transactions = ref(seedTransactions);
 
-  const totalIncome = computed(() =>
+  const sumBySign = (isPositive) =>
     transactions.value
-      .filter((item) => item.amount > 0)
-      .reduce((sum, item) => sum + item.amount, 0)
-  );
+      .filter((item) => (isPositive ? item.amount > 0 : item.amount < 0))
+      .reduce((sum, item) => sum + item.amount, 0);
 
-  const totalExpense = computed(() =>
-    Math.abs(
-      transactions.value
-        .filter((item) => item.amount < 0)
-        .reduce((sum, item) => sum + item.amount, 0)
-    )
-  );
+  const totalIncome = computed(() => sumBySign(true));
+
+  const totalExpense = computed(() => Math.abs(sumBySign(false)));
 
   const totalBalance = computed(() => totalIncome.value - totalExpense.value);
 

@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps({
+defineProps({
   accounts: {
     type: Array,
     default: () => []
