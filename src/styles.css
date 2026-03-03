@@ -356,6 +356,7 @@ select {
 .filter-actions {
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 7px;
 }
 
