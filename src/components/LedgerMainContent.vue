@@ -18,13 +18,38 @@ defineProps({
     type: Array,
     default: () => []
   },
+  filters: {
+    type: Object,
+    required: true
+  },
+  accountOptions: {
+    type: Array,
+    default: () => []
+  },
+  categoryOptions: {
+    type: Array,
+    default: () => []
+  },
   formatCurrency: {
     type: Function,
     required: true
   }
 });
 
-const emit = defineEmits(['open-category-edit', 'open-transaction-edit']);
+const emit = defineEmits([
+  'open-category-edit',
+  'open-transaction-edit',
+  'update-filter',
+  'apply-filters',
+  'reset-filters'
+]);
+
+const onFilterInput = (key, event) => {
+  emit('update-filter', {
+    key,
+    value: event.target.value
+  });
+};
 </script>
 
 <template>
@@ -45,46 +70,66 @@ const emit = defineEmits(['open-category-edit', 'open-transaction-edit']);
         <label>
           기간
           <div class="period-grid">
-            <input type="date" value="2026-02-01" />
+            <input type="date" :value="filters.dateFrom" @input="onFilterInput('dateFrom', $event)" />
             <span>~</span>
-            <input type="date" value="2026-02-29" />
+            <input type="date" :value="filters.dateTo" @input="onFilterInput('dateTo', $event)" />
           </div>
         </label>
         <label>
           계좌
-          <select>
-            <option>전체</option>
+          <select :value="filters.account" @change="onFilterInput('account', $event)">
+            <option value="ALL">전체</option>
+            <option v-for="account in accountOptions" :key="account" :value="account">{{ account }}</option>
           </select>
         </label>
         <label>
           유형
-          <select>
-            <option>전체</option>
+          <select :value="filters.transactionType" @change="onFilterInput('transactionType', $event)">
+            <option value="ALL">전체</option>
+            <option value="INCOME">수입</option>
+            <option value="EXPENSE">지출</option>
           </select>
         </label>
         <label>
           카테고리
-          <select>
-            <option>전체</option>
+          <select :value="filters.category" @change="onFilterInput('category', $event)">
+            <option value="ALL">전체</option>
+            <option v-for="category in categoryOptions" :key="category" :value="category">{{ category }}</option>
           </select>
         </label>
         <label>
           메모 검색
-          <input type="text" placeholder="메모 키워드 입력" />
+          <input
+            type="text"
+            placeholder="메모 키워드 입력"
+            :value="filters.memoKeyword"
+            @input="onFilterInput('memoKeyword', $event)"
+          />
         </label>
         <label>
           최소 금액
-          <input type="number" placeholder="0" />
+          <input
+            type="number"
+            placeholder="0"
+            :value="filters.minAmount"
+            @input="onFilterInput('minAmount', $event)"
+          />
         </label>
         <label>
           최대 금액
-          <input type="number" placeholder="제한 없음" />
+          <input
+            type="number"
+            placeholder="제한 없음"
+            :value="filters.maxAmount"
+            @input="onFilterInput('maxAmount', $event)"
+          />
         </label>
       </div>
       <div class="filter-actions">
-        <button type="button" class="line">초기화</button>
-        <button type="button" class="primary-button">조회</button>
+        <button type="button" class="line" @click="emit('reset-filters')">초기화</button>
+        <button type="button" class="primary-button" @click="emit('apply-filters')">조회</button>
       </div>
+      <p class="filter-result-info">조회 결과 {{ transactions.length }}건</p>
     </div>
 
     <div class="summary-grid">

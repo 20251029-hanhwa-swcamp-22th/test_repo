@@ -2,46 +2,51 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 export const useUiStore = defineStore('ui', () => {
+  // 전역 UI 상태(화면 전환/모달 열림 여부)를 관리한다.
   const activeScreen = ref('ledger');
   const showAccountAddModal = ref(false);
   const showAccountAnalysisModal = ref(false);
   const showTransactionEditModal = ref(false);
   const showCategoryEditModal = ref(false);
 
+  const setModal = (modalRef, isOpen) => {
+    modalRef.value = isOpen;
+  };
+
   const setActiveScreen = (screen) => {
     activeScreen.value = screen;
   };
 
   const openAccountAddModal = () => {
-    showAccountAddModal.value = true;
+    setModal(showAccountAddModal, true);
   };
 
   const closeAccountAddModal = () => {
-    showAccountAddModal.value = false;
+    setModal(showAccountAddModal, false);
   };
 
   const openAccountAnalysisModal = () => {
-    showAccountAnalysisModal.value = true;
+    setModal(showAccountAnalysisModal, true);
   };
 
   const closeAccountAnalysisModal = () => {
-    showAccountAnalysisModal.value = false;
+    setModal(showAccountAnalysisModal, false);
   };
 
   const openTransactionEditModal = () => {
-    showTransactionEditModal.value = true;
+    setModal(showTransactionEditModal, true);
   };
 
   const closeTransactionEditModal = () => {
-    showTransactionEditModal.value = false;
+    setModal(showTransactionEditModal, false);
   };
 
   const openCategoryEditModal = () => {
-    showCategoryEditModal.value = true;
+    setModal(showCategoryEditModal, true);
   };
 
   const closeCategoryEditModal = () => {
-    showCategoryEditModal.value = false;
+    setModal(showCategoryEditModal, false);
   };
 
   return {

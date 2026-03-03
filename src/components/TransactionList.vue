@@ -15,6 +15,10 @@ const emit = defineEmits(['edit-transaction']);
 
 <template>
   <div class="transaction-list">
+    <article v-if="transactions.length === 0" class="transaction-empty">
+      조건에 맞는 거래 내역이 없습니다.
+    </article>
+
     <article v-for="(item, index) in transactions" :key="`${item.date}-${index}`" class="transaction-row">
       <div class="row-left">
         <span class="date">{{ item.date }}</span>

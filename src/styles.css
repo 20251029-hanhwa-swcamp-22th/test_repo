@@ -359,6 +359,13 @@ select {
   gap: 7px;
 }
 
+.filter-result-info {
+  margin: 0;
+  text-align: right;
+  color: #8f98aa;
+  font-size: 12px;
+}
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -408,6 +415,16 @@ select {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.transaction-empty {
+  margin: 0;
+  border: 1px dashed #4c5f98;
+  border-radius: 6px;
+  padding: 16px;
+  text-align: center;
+  color: #aab8e2;
+  background: rgba(8, 14, 34, 0.68);
 }
 
 .row-left {

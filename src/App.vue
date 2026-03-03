@@ -11,6 +11,7 @@ import { useAccountStore } from './stores/accountStore';
 import { useTransactionStore } from './stores/transactionStore';
 import { useUiStore } from './stores/uiStore';
 
+// App은 화면 조립과 화면 전환만 담당한다.
 const uiStore = useUiStore();
 const transactionStore = useTransactionStore();
 const accountStore = useAccountStore();
@@ -23,11 +24,37 @@ const {
   showCategoryEditModal
 } = storeToRefs(uiStore);
 
-const { transactions, totalIncome, totalExpense, totalBalance } = storeToRefs(transactionStore);
+const {
+  draftFilters,
+  filteredTransactions,
+  accountOptions,
+  categoryOptions,
+  totalIncome,
+  totalExpense,
+  totalBalance
+} = storeToRefs(transactionStore);
 const { accounts, totalBalanceAmount, totalAccounts, accountShareRows } = storeToRefs(accountStore);
+
+const screenTabs = [
+  { id: 'login', label: '로그인' },
+  { id: 'signup', label: '회원가입' },
+  { id: 'ledger', label: '거래내역' }
+];
 
 const setScreen = (screen) => {
   uiStore.setActiveScreen(screen);
+};
+
+const updateFilter = ({ key, value }) => {
+  transactionStore.setDraftFilter(key, value);
+};
+
+const applyFilters = () => {
+  transactionStore.applyFilters();
+};
+
+const resetFilters = () => {
+  transactionStore.resetFilters();
 };
 </script>
 
@@ -49,14 +76,14 @@ const setScreen = (screen) => {
     <main class="workspace">
       <section class="screen-switcher">
         <button
-          v-for="screen in ['login', 'signup', 'ledger']"
-          :key="screen"
+          v-for="screen in screenTabs"
+          :key="screen.id"
           type="button"
           class="screen-tab"
-          :class="{ active: activeScreen === screen }"
-          @click="setScreen(screen)"
+          :class="{ active: activeScreen === screen.id }"
+          @click="setScreen(screen.id)"
         >
-          {{ screen === 'login' ? '로그인' : screen === 'signup' ? '회원가입' : '거래내역' }}
+          {{ screen.label }}
         </button>
       </section>
 
@@ -77,13 +104,19 @@ const setScreen = (screen) => {
           />
 
           <LedgerMainContent
-            :transactions="transactions"
+            :transactions="filteredTransactions"
+            :filters="draftFilters"
+            :account-options="accountOptions"
+            :category-options="categoryOptions"
             :total-income="totalIncome"
             :total-expense="totalExpense"
             :total-balance="totalBalance"
             :format-currency="transactionStore.formatCurrency"
             @open-category-edit="uiStore.openCategoryEditModal"
             @open-transaction-edit="uiStore.openTransactionEditModal"
+            @update-filter="updateFilter"
+            @apply-filters="applyFilters"
+            @reset-filters="resetFilters"
           />
         </div>
       </section>
