@@ -41,7 +41,8 @@ const emit = defineEmits([
   'open-transaction-edit',
   'update-filter',
   'apply-filters',
-  'reset-filters'
+  'reset-filters',
+  'export-csv'
 ]);
 
 const onFilterInput = (key, event) => {
@@ -126,6 +127,7 @@ const onFilterInput = (key, event) => {
         </label>
       </div>
       <div class="filter-actions">
+        <button type="button" class="line" @click="emit('export-csv')">CSV 내보내기</button>
         <button type="button" class="line" @click="emit('reset-filters')">초기화</button>
         <button type="button" class="primary-button" @click="emit('apply-filters')">조회</button>
       </div>

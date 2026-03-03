@@ -56,6 +56,52 @@ const applyFilters = () => {
 const resetFilters = () => {
   transactionStore.resetFilters();
 };
+
+const exportTransactionsCsv = () => {
+  const rows = filteredTransactions.value;
+
+  if (rows.length === 0) {
+    window.alert('내보낼 거래 내역이 없습니다.');
+    return;
+  }
+
+  const escapeCell = (value) => {
+    const text = String(value ?? '');
+    return `"${text.replace(/"/g, '""')}"`;
+  };
+
+  const headers = ['날짜', '유형', '카테고리', '계좌', '메모', '금액'];
+  const dataRows = rows.map((item) => [
+    item.date,
+    item.amount >= 0 ? '수입' : '지출',
+    item.category,
+    item.account,
+    item.memo,
+    item.amount
+  ]);
+
+  const csv = [headers, ...dataRows]
+    .map((row) => row.map(escapeCell).join(','))
+    .join('\n');
+
+  const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  const now = new Date();
+  const yyyymmdd = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0')
+  ].join('');
+
+  link.href = url;
+  link.download = `transactions_${yyyymmdd}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
 </script>
 
 <template>
@@ -117,6 +163,7 @@ const resetFilters = () => {
             @update-filter="updateFilter"
             @apply-filters="applyFilters"
             @reset-filters="resetFilters"
+            @export-csv="exportTransactionsCsv"
           />
         </div>
       </section>
