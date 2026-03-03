@@ -24,7 +24,15 @@ const {
   showCategoryEditModal
 } = storeToRefs(uiStore);
 
-const { transactions, totalIncome, totalExpense, totalBalance } = storeToRefs(transactionStore);
+const {
+  draftFilters,
+  filteredTransactions,
+  accountOptions,
+  categoryOptions,
+  totalIncome,
+  totalExpense,
+  totalBalance
+} = storeToRefs(transactionStore);
 const { accounts, totalBalanceAmount, totalAccounts, accountShareRows } = storeToRefs(accountStore);
 
 const screenTabs = [
@@ -35,6 +43,18 @@ const screenTabs = [
 
 const setScreen = (screen) => {
   uiStore.setActiveScreen(screen);
+};
+
+const updateFilter = ({ key, value }) => {
+  transactionStore.setDraftFilter(key, value);
+};
+
+const applyFilters = () => {
+  transactionStore.applyFilters();
+};
+
+const resetFilters = () => {
+  transactionStore.resetFilters();
 };
 </script>
 
@@ -84,13 +104,19 @@ const setScreen = (screen) => {
           />
 
           <LedgerMainContent
-            :transactions="transactions"
+            :transactions="filteredTransactions"
+            :filters="draftFilters"
+            :account-options="accountOptions"
+            :category-options="categoryOptions"
             :total-income="totalIncome"
             :total-expense="totalExpense"
             :total-balance="totalBalance"
             :format-currency="transactionStore.formatCurrency"
             @open-category-edit="uiStore.openCategoryEditModal"
             @open-transaction-edit="uiStore.openTransactionEditModal"
+            @update-filter="updateFilter"
+            @apply-filters="applyFilters"
+            @reset-filters="resetFilters"
           />
         </div>
       </section>
